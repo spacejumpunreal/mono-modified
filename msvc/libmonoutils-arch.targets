@@ -11,6 +11,10 @@
     <ExcludeFromWindows64Build>false</ExcludeFromWindows64Build>
     <ExcludeFromWindows64Build Condition="'$(Platform)'=='x64'">true</ExcludeFromWindows64Build>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(ExcludeFromWindowsARM64Build)'==''">
+    <ExcludeFromWindowsARM64Build>false</ExcludeFromWindowsARM64Build>
+    <ExcludeFromWindowsARM64Build Condition="'$(Platform)'=='ARM64'">true</ExcludeFromWindowsARM64Build>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(ExcludeMASMFromWindowsBuild)'==''">
     <ExcludeMASMFromWindowsBuild>false</ExcludeMASMFromWindowsBuild>
   </PropertyGroup>
@@ -40,10 +44,12 @@
   </ItemGroup>
   <ItemGroup Label="arch_arm64_sources">
     <ClCompile Include="$(MonoSourceLocation)\mono\utils\mach-support-arm64.c">
-      <ExcludedFromBuild>$(ExcludeFromWindowsBuild)</ExcludedFromBuild>
+      <ExcludedFromBuild>$(ExcludeFromWindows32Build)</ExcludedFromBuild>
+      <ExcludedFromBuild>$(ExcludeFromWindows64Build)</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="$(MonoSourceLocation)\mono\utils\mono-hwcap-arm64.c">
-      <ExcludedFromBuild>$(ExcludeFromWindowsBuild)</ExcludedFromBuild>
+      <ExcludedFromBuild>$(ExcludeFromWindows32Build)</ExcludedFromBuild>
+      <ExcludedFromBuild>$(ExcludeFromWindows64Build)</ExcludedFromBuild>
     </ClCompile>
   </ItemGroup>
   <ItemGroup Label="arch_mips_sources">

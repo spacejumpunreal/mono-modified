@@ -32,7 +32,7 @@ my $debug=0;
 my $checkoutOnTheFly=0;
 my $forceDefaultBuildDeps=0;
 my $existingMonoRootPath = '';
-my $arch32 = 0;
+my $targetArch = "";
 my $winPerl = "perl";
 my $winMonoRoot = $monoroot;
 my $buildDeps = "";
@@ -45,7 +45,7 @@ GetOptions(
 	'clean=i'=>\$clean,
 	'artifact=i'=>\$artifact,
 	'debug=i'=>\$debug,
-	'arch32=i'=>\$arch32,
+	'targetarch=s'=>\$targetArch,
 	'existingmono=s'=>\$existingMonoRootPath,
 	'winperl=s'=>\$winPerl,
 	'winmonoroot=s'=>\$winMonoRoot,
@@ -101,8 +101,8 @@ if ($build)
 		print(">>> mono-build-deps is not required for windows runtime builds...\n");
 	}
 
-	system("$winPerl", "$winMonoRoot/external/buildscripts/build_runtime_vs.pl", "--build=$build", "--arch32=$arch32", "--clean=$clean", "--debug=$debug", "--gc=boehm") eq 0 or die ('failed building mono bdwgc with VS\n');
-	system("$winPerl", "$winMonoRoot/external/buildscripts/build_runtime_vs.pl", "--build=$build", "--arch32=$arch32", "--clean=$clean", "--debug=$debug", "--gc=sgen") eq 0 or die ('failed building mono sgen with VS\n');
+	system("$winPerl", "$winMonoRoot/external/buildscripts/build_runtime_vs.pl", "--build=$build", "--targetarch=$targetArch", "--clean=$clean", "--debug=$debug", "--gc=boehm") eq 0 or die ('failed building mono bdwgc with VS\n');
+	system("$winPerl", "$winMonoRoot/external/buildscripts/build_runtime_vs.pl", "--build=$build", "--targetarch=$targetArch", "--clean=$clean", "--debug=$debug", "--gc=sgen") eq 0 or die ('failed building mono sgen with VS\n');
 
 	if (!(-d "$monoroot\\tmp"))
 	{
@@ -121,9 +121,8 @@ if ($build)
 		print(">>> Creating directory $monoprefix\\bin\n");
 		system("mkdir $monoprefix\\bin") eq 0 or die ("failing creating $monoprefix\\bin\n");;
 	}
-
-	# Copy over the VS built stuff that we want to use instead into the prefix directory
-	my $archNameForBuild = $arch32 ? 'Win32' : 'x64';
+	
+    my $archNameForBuild = $targetArch;
 	my $configDirName = $debug ? "Debug" : "Release";
 
 	copy("$monoroot/msvc/build/boehm/$archNameForBuild/bin/$configDirName/mono-bdwgc.exe", "$monoprefix/bin/mono-bdwgc.exe") or die ("failed copying mono-bdwgc.exe\n");
@@ -153,9 +152,9 @@ if ($artifact)
 
 	my $embedDirRoot = "$buildsroot\\embedruntimes";
 
-	my $embedDirArchDestination = $arch32 ? "$embedDirRoot\\win32" : "$embedDirRoot\\win64";
-	my $distDirArchBin = $arch32 ? "$distdir\\bin" : "$distdir\\bin-x64";
-	my $versionsOutputFile = $arch32 ? "$buildsroot\\versions-win32.txt" : "$buildsroot\\versions-win64.txt";
+	my $embedDirArchDestination = "$embedDirRoot\\$targetarch";
+	my $distDirArchBin = "$targetarch";
+	my $versionsOutputFile = "$buildsroot\\versions-$targetarch.txt";
 
 	# Make sure the directory for our architecture is clean before we copy stuff into it
 	if (-d "$embedDirArchDestination")

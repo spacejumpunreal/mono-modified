@@ -48,6 +48,18 @@
     <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
@@ -67,6 +79,14 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="mono.props" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="mono.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="mono.props" />
+  </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -80,6 +100,12 @@
     <OutDir>$(MONO_BUILD_DIR_PREFIX)$(Platform)\bin\$(Configuration)\</OutDir>
     <IntDir>$(MONO_BUILD_DIR_PREFIX)$(Platform)\obj\$(ProjectName)$(MONO_TARGET_SUFFIX)\$(Configuration)\</IntDir>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+    <LinkIncremental>false</LinkIncremental>
+    <TargetName>$(ProjectName)$(MONO_TARGET_SUFFIX)</TargetName>
+    <OutDir>$(MONO_BUILD_DIR_PREFIX)$(Platform)\bin\$(Configuration)\</OutDir>
+    <IntDir>$(MONO_BUILD_DIR_PREFIX)$(Platform)\obj\$(ProjectName)$(MONO_TARGET_SUFFIX)\$(Configuration)\</IntDir>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <TargetName>$(ProjectName)$(MONO_TARGET_SUFFIX)</TargetName>
@@ -87,6 +113,12 @@
     <IntDir>$(MONO_BUILD_DIR_PREFIX)$(Platform)\obj\$(ProjectName)$(MONO_TARGET_SUFFIX)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)$(MONO_TARGET_SUFFIX)</TargetName>
+    <OutDir>$(MONO_BUILD_DIR_PREFIX)$(Platform)\bin\$(Configuration)\</OutDir>
+    <IntDir>$(MONO_BUILD_DIR_PREFIX)$(Platform)\obj\$(ProjectName)$(MONO_TARGET_SUFFIX)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
     <LinkIncremental>true</LinkIncremental>
     <TargetName>$(ProjectName)$(MONO_TARGET_SUFFIX)</TargetName>
     <OutDir>$(MONO_BUILD_DIR_PREFIX)$(Platform)\bin\$(Configuration)\</OutDir>
@@ -130,6 +162,26 @@
       <StackReserveSize>0x800000</StackReserveSize>
     </Link>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+    <Midl>
+      <TargetEnvironment>ARM64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(MONO_DIR);$(MONO_INCLUDE_DIR);$(MONO_JIT_INCLUDE_DIR);$(MONO_LIBGC_SOURCE_DIR);$(MONO_EGLIB_SOURCE_DIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;WIN32_LEAN_AND_MEAN;_WINDOWS;WIN64;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+    <Link>
+      <AdditionalDependencies>$(MONO_LIBMONO_LIB);%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
+      <StackReserveSize>0x800000</StackReserveSize>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <AdditionalIncludeDirectories>$(MONO_DIR);$(MONO_INCLUDE_DIR);$(MONO_JIT_INCLUDE_DIR);$(MONO_LIBGC_SOURCE_DIR);$(MONO_EGLIB_SOURCE_DIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -152,6 +204,28 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Midl>
       <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(MONO_DIR);$(MONO_INCLUDE_DIR);$(MONO_JIT_INCLUDE_DIR);$(MONO_LIBGC_SOURCE_DIR);$(MONO_EGLIB_SOURCE_DIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;WIN32_LEAN_AND_MEAN;_WINDOWS;WIN64;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WarningLevel>Level3</WarningLevel>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <StringPooling>true</StringPooling>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+    </ClCompile>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+    <Link>
+      <AdditionalDependencies>$(MONO_LIBMONO_LIB);%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
+      <StackReserveSize>0x180000</StackReserveSize>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+    <Midl>
+      <TargetEnvironment>ARM64</TargetEnvironment>
     </Midl>
     <ClCompile>
       <AdditionalIncludeDirectories>$(MONO_DIR);$(MONO_INCLUDE_DIR);$(MONO_JIT_INCLUDE_DIR);$(MONO_LIBGC_SOURCE_DIR);$(MONO_EGLIB_SOURCE_DIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>

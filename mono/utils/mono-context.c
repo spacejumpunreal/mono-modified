@@ -513,7 +513,6 @@ mono_monoctx_to_sigctx (MonoContext *mctx, void *ctx)
 }
 
 #elif (defined(__aarch64__) && !defined(MONO_CROSS_COMPILE)) || (defined(TARGET_ARM64))
-
 #include <mono/utils/mono-context.h>
 #include <mono/utils/ftnptr.h>
 
