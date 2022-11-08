@@ -727,6 +727,8 @@ mono_gc_weak_link_add (void **link_addr, MonoObject *obj, gboolean track)
 	/* libgc requires that we use HIDE_POINTER... */
 	*link_addr = (void*)HIDE_POINTER (obj);
 	mono_gc_dirty (link_addr);
+	if (!GC_is_heap_ptr (obj))
+		return;
 	if (track)
 		GC_REGISTER_LONG_LINK (link_addr, obj);
 	else
